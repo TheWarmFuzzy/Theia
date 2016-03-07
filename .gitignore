@@ -47,5 +47,13 @@ Temporary Items
 .apdisk
 
 #Theia Custom Directories
+
+/img
 /reference
+
+#Theia Custom Files
+
 .htaccess
+/lib/jquery-1.11.3.js
+/lib/three.min.js
+/lib/OBJLoader.js

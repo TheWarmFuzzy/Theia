@@ -20,6 +20,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="lib/camera.js"></script>
+	<script type="text/javascript" src="lib/three.min.js"></script>
+	<script type="text/javascript" src="lib/OBJLoader.js"></script>
+	<script type="text/javascript" src="lib/3DOverlay.js"></script>
 	<script type="text/javascript" src="lib/tracking_mk_theia.js"></script>
 	<script type="text/javascript" src="lib/debug.js"></script>
 	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
@@ -32,6 +35,7 @@
 		
 		var tracker = new tracking.ColorTracker();
 		tracking.track(camera,tracker);
+		
 		
 		
 		tracker.on('track', function(event) {
@@ -50,7 +54,8 @@
 				camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
 			});
 		});
-
+		
+		var overlay = new Overlay();
 	</script>
 	
 </body>
