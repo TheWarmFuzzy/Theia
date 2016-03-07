@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body{
+			margin:0px;
+			overflow:hidden;
+		}
+		video, canvas{
+			position:absolute;
+			top:0px;
+			left:0px;
+		}
+		canvas{
+			z-index:100;
+		}
+	
+	</style>
+	<meta http-equiv="Cache-Control" content="no-store" />
+</head>
+<body>
+	<script type="text/javascript" src="lib/camera.js"></script>
+	<script type="text/javascript" src="lib/tracking_mk_theia.js"></script>
+	<script type="text/javascript" src="lib/debug.js"></script>
+	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
+	<script type="text/javascript">
+		var debug = new Debug();
+		debug.toggle_enabled();
+		
+		var camera = new Camera();
+		camera.start();
+		
+		var tracker = new tracking.ColorTracker();
+		tracking.track(camera,tracker);
+		
+		
+		tracker.on('track', function(event) {
+			camera.ctx.clearRect(0, 0, camera.width, camera.height);
+
+			event.data.forEach(function(rect) {
+				if (rect.color === 'custom') {
+					rect.color = tracker.customColor;
+				}
+
+				camera.ctx.strokeStyle = rect.color;
+				camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+				camera.ctx.font = '11px Helvetica';
+				camera.ctx.fillStyle = "#fff";
+				camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+				camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+			});
+		});
+
+	</script>
+	
+</body>
+</html>
