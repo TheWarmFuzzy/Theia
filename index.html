@@ -41,7 +41,7 @@
 		
 		tracker.on('track', function(event) {
 			camera.ctx.clearRect(0, 0, camera.width, camera.height);
-			if(event.data.length == 4 || true == true){
+			if(event.data.length == 4){
 				event.data.forEach(function(rect) {
 					if (rect.color === 'custom') {
 						rect.color = tracker.customColor;
