@@ -41,21 +41,22 @@
 		
 		tracker.on('track', function(event) {
 			camera.ctx.clearRect(0, 0, camera.width, camera.height);
+			if(event.data.length == 4 || true == true){
+				event.data.forEach(function(rect) {
+					if (rect.color === 'custom') {
+						rect.color = tracker.customColor;
+					}
 
-			event.data.forEach(function(rect) {
-				if (rect.color === 'custom') {
-					rect.color = tracker.customColor;
-				}
-
-				camera.ctx.strokeStyle = rect.color;
-				camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-				camera.ctx.font = '11px Helvetica';
-				camera.ctx.fillStyle = "#fff";
-				camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-				camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-				
-				overlay.set_object_position("Test Object",rect.x,rect.y);
-			});
+					camera.ctx.strokeStyle = rect.color;
+					camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+					camera.ctx.font = '11px Helvetica';
+					camera.ctx.fillStyle = "#fff";
+					camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+					camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+					
+					overlay.set_object_position("Test Object",rect.x,rect.y);
+				});
+			}
 		});
 		
 		
