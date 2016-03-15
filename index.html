@@ -35,14 +35,28 @@
 		camera.start();
 		
 		var tracker = new tracking.ColorTracker();
-		tracking.track(camera,tracker);
+		var test = tracking.track(camera,tracker);
 		
 		var overlay = new Overlay();
 		
 		tracker.on('track', function(event) {
 			camera.ctx.clearRect(0, 0, camera.width, camera.height);
-			position_cat(event.data);
+			console.log(event);
+			if(typeof event.data[0] == "string"){
+				console.log("fuck");
+				 window.cancelAnimationFrame(test);
+				tracker = new tracking.ColorTracker();
+				tracking.track(camera,tracker);
+			}else{
+				position_cat(event.data);
+				update_position();
+			}
 		});
+		
+		function update_position(){
+			var object = overlay.get_object("Test Object");
+			overlay.update(object);
+		}
 		
 		function position_cat(rectangles){
 			
@@ -80,7 +94,6 @@
 				x1 *= 0.25;
 				y1 *= 0.25;
 				scale *= 0.0075;
-				console.log(scale);
 				overlay.set_object_position(object,x1,y1);
 				overlay.set_object_scale(object,scale);
 			}
