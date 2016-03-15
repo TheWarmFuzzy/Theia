@@ -41,24 +41,50 @@
 		
 		tracker.on('track', function(event) {
 			camera.ctx.clearRect(0, 0, camera.width, camera.height);
-			if(event.data.length == 4){
-				event.data.forEach(function(rect) {
-					if (rect.color === 'custom') {
-						rect.color = tracker.customColor;
-					}
-
-					camera.ctx.strokeStyle = rect.color;
-					camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-					camera.ctx.font = '11px Helvetica';
-					camera.ctx.fillStyle = "#fff";
-					camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-					camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-					
-					overlay.set_object_position("Test Object",rect.x,rect.y);
-				});
-			}
+			position_cat(event.data);
 		});
 		
+		function position_cat(rectangles){
+			
+			var x1 = 0, y1 = 0;
+			var scale = 0;
+			var i = 0;
+			rectangles.forEach(function(rect) {
+				i++;
+				if (rect.color === 'theia_red') {
+					rect.color = "#aa0000";
+				}
+				
+				if (rect.color === 'theia_green') {
+					rect.color = "#00aa00";
+				}
+				
+				if(rectangles.length == 4){
+					x1 += rect.x + rect.width  * 0.5;
+					y1 += rect.y + rect.height  * 0.5;
+					scale += rect.width + rect.height;
+				}
+				
+				camera.ctx.strokeStyle = rect.color;
+				camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+				camera.ctx.font = '11px Helvetica';
+				camera.ctx.fillStyle = "#fff";
+				camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+				camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+				camera.ctx.fillText('#: ' + i, rect.x + rect.width + 5, rect.y + 33);
+				
+			});
+			
+			if(rectangles.length == 4){
+				var object = overlay.get_object("Test Object");
+				x1 *= 0.25;
+				y1 *= 0.25;
+				scale *= 0.0075;
+				console.log(scale);
+				overlay.set_object_position(object,x1,y1);
+				overlay.set_object_scale(object,scale);
+			}
+		}
 		
 	</script>
 	
