@@ -9,8 +9,10 @@
 		}
 		video, canvas{
 			position:absolute;
-			top:0px;
-			left:0px;
+			top:50%;
+			margin-top:-225px;
+			left:50%;
+			margin-left:-300px;
 		}
 		canvas{
 			z-index:100;
@@ -18,6 +20,7 @@
 	
 	</style>
 	<meta http-equiv="Cache-Control" content="no-store" />
+	<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 	<script type="text/javascript" src="lib/camera.js"></script>
@@ -31,26 +34,32 @@
 		var debug = new Debug();
 		debug.toggle_enabled();
 		
-		var camera = new Camera();
+		var camera = new Camera(600, 450);
 		camera.start();
 		
 		var tracker = new tracking.ColorTracker();
 		var test = tracking.track(camera,tracker);
 		
-		var overlay = new Overlay();
+		var overlay = new Overlay(600, 450);		
 		
 		tracker.on('track', function(event) {
 			camera.ctx.clearRect(0, 0, camera.width, camera.height);
-			console.log(event);
+			var orientation = "";
 			if(typeof event.data[0] == "string"){
 				console.log("fuck");
 				 window.cancelAnimationFrame(test);
 				tracker = new tracking.ColorTracker();
 				tracking.track(camera,tracker);
 			}else{
-				position_cat(event.data);
+				show_boxes(event.data);
+				var qr_code = qr_code_validation(event.data);
+				if(qr_code["validated"]){
+					orientation = qr_code["orientation"];
+					position_cat(event.data);
+				}
 				update_position();
 			}
+			//camera.ctx.fillText('QR Orientation: ' + orientation, 1, 11);
 		});
 		
 		function update_position(){
@@ -58,34 +67,76 @@
 			overlay.update(object);
 		}
 		
-		function position_cat(rectangles){
-			
-			var x1 = 0, y1 = 0;
-			var scale = 0;
+		function qr_code_validation(rectangles){
+			var validated = false;
+			rects = new Array();
+			rects["red"] = new Array();
+			rects["green"] = new Array();
+			var red = 0, green = 0;
+			rectangles.forEach(function(rect) {
+				if (rect.color == 'theia_red'){
+					red++;
+					rects["red"].push(rect);
+				}
+				
+				if (rect.color == 'theia_green'){
+					green++;
+					rects["green"].push(rect);
+				}
+					
+				if(red == 3 && green == 1)
+					validated = true;
+			});
+			var orientation = "";
+			if(validated){
+				var below = 0, right = 0;
+				for(i = 0; i < 3; i++){
+					
+					if(rects["green"][0].x >= rects["red"][i].x)
+						right += 1;
+						
+					if(rects["green"][0].y >= rects["red"][i].y)
+						below += 1;
+				}
+			}
+			return {"orientation":orientation,"validated":validated};
+		}
+		
+		function show_boxes(rectangles){
+		
 			var i = 0;
+			
 			rectangles.forEach(function(rect) {
 				i++;
-				if (rect.color === 'theia_red') {
-					rect.color = "#aa0000";
+				if (rect.color == 'theia_red') {
+					rect.colour = "#aa0000";
 				}
 				
-				if (rect.color === 'theia_green') {
-					rect.color = "#00aa00";
+				if (rect.color == 'theia_green') {
+					rect.colour = "#00aa00";
 				}
-				
-				if(rectangles.length == 4){
-					x1 += rect.x + rect.width  * 0.5;
-					y1 += rect.y + rect.height  * 0.5;
-					scale += rect.width + rect.height;
-				}
-				
-				camera.ctx.strokeStyle = rect.color;
+								
+				camera.ctx.strokeStyle = rect.colour;
 				camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
 				camera.ctx.font = '11px Helvetica';
 				camera.ctx.fillStyle = "#fff";
 				camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
 				camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
 				camera.ctx.fillText('#: ' + i, rect.x + rect.width + 5, rect.y + 33);
+			});
+		}
+		
+		function position_cat(rectangles){
+			
+			var x1 = 0, y1 = 0;
+			var scale = 0;
+			rectangles.forEach(function(rect) {
+				
+				if(rectangles.length == 4){
+					x1 += rect.x + rect.width  * 0.5;
+					y1 += rect.y + rect.height  * 0.5;
+					scale += rect.width + rect.height;
+				}
 				
 			});
 			
