@@ -50,29 +50,37 @@
 	<script type="text/javascript" src="lib/OBJLoader.js"></script>
 	<script type="text/javascript" src="lib/3DOverlay.js"></script>
 	<script type="text/javascript" src="lib/tracking_mk_theia.js"></script>
-	<script type="text/javascript" src="lib/debug.js"></script>
 	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
 	<script type="text/javascript" src="lib/QR_Code.js"></script>
+	<script type="text/javascript" src="lib/Showcase.js"></script>
 	<script type="text/javascript">
-		var debug = new Debug();
-		debug.toggle_enabled();
-		
+		var showcase_mode = true;
+		var debug_mode = false;
+
 		var camera = new Camera(600, 450);
+		var tracker = new tracking.ColorTracker();
+		var overlay = new Overlay(600, 450);
+		var qr_handler = new QR_Code(camera, overlay);
 		camera.start();
 		
-		var tracker = new tracking.ColorTracker();
-		var test = tracking.track(camera,tracker);
+		function start(){
+			console.log("Started");
+			tracking.track(camera, tracker);
+			tracker.on('track', function(event) {
+				if(debug_mode)
+					draw_boxes(camera, event.data);
+				qr_handler.update(event.data);
+				camera.update();
+			});
+		}
 		
-		var overlay = new Overlay(600, 450);		
+		if(showcase_mode){
+			var showcase = new Showcase(camera, start);
+			showcase.start();
+		}else{
+			start();
+		}
 		
-		var qr_handler = new QR_Code(camera, overlay);
-		
-		tracker.on('track', function(event) {
-			draw_boxes(camera, event.data);
-			qr_handler.update(event.data);
-			camera.update();
-		});
-				
 		function draw_boxes(cam, rectangles){
 		
 			var i = 0;
