@@ -23,6 +23,27 @@
 	<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
+	<!--<script type="text/javascript" src="lib/grid.js"></script>
+	<script type="text/javascript" src="lib/version.js"></script>
+	<script type="text/javascript" src="lib/detector.js"></script>
+	<script type="text/javascript" src="lib/formatinf.js"></script>
+	<script type="text/javascript" src="lib/errorlevel.js"></script>
+	<script type="text/javascript" src="lib/bitmat.js"></script>
+	<script type="text/javascript" src="lib/datablock.js"></script>
+	<script type="text/javascript" src="lib/bmparser.js"></script>
+	<script type="text/javascript" src="lib/datamask.js"></script>
+	<script type="text/javascript" src="lib/rsdecoder.js"></script>
+	<script type="text/javascript" src="lib/gf256poly.js"></script>
+	<script type="text/javascript" src="lib/gf256.js"></script>
+	<script type="text/javascript" src="lib/decoder.js"></script>
+	<script type="text/javascript" src="lib/qrcode.js"></script>
+	<script type="text/javascript" src="lib/findpat.js"></script>
+	<script type="text/javascript" src="lib/alignpat.js"></script>
+	<script type="text/javascript" src="lib/databr.js"></script>-->
+
+	<script type="text/javascript" src="lib/llqrcode.js"></script>    
+    <script type="text/javascript" src="lib/qrcode.js"></script>
+	
 	<script type="text/javascript" src="lib/theia_lib.js"></script>
 	<script type="text/javascript" src="lib/camera.js"></script>
 	<script type="text/javascript" src="lib/three.min.js"></script>
@@ -31,6 +52,7 @@
 	<script type="text/javascript" src="lib/tracking_mk_theia.js"></script>
 	<script type="text/javascript" src="lib/debug.js"></script>
 	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="lib/QR_Code.js"></script>
 	<script type="text/javascript">
 		var debug = new Debug();
 		debug.toggle_enabled();
@@ -43,28 +65,39 @@
 		
 		var overlay = new Overlay(600, 450);		
 		
+		var qr_handler = new QR_Code(camera, overlay);
+		
 		tracker.on('track', function(event) {
-			camera.ctx.clearRect(0, 0, camera.width, camera.height);
-			var orientation = "";
-			if(typeof event.data[0] == "string"){
+			//camera.ctx.clearRect(0, 0, camera.width, camera.height);
+			//var orientation = "";
+			/*if(typeof event.data[0] == "string"){
 				console.log("fuck");
 				window.cancelAnimationFrame(test);
 				tracker = new tracking.ColorTracker();
 				tracking.track(camera,tracker);
 			}else{
-				show_boxes(event.data);
-				var qr_code = qr_code_validation(event.data);
-				if(qr_code["validated"]){
-					orientation = qr_code["orientation"];
-					var points = get_points(event.data);
-					var canvas = camera.getFrame();
-					var qr = remap(canvas, points, 100, 100);
-					document.body.appendChild(qr);
-					position_cat(event.data);
+				
+			}*/
+			
+			draw_boxes(camera, event.data);
+			/*var qr_code = qr_code_validation(event.data);
+			if(qr_code["validated"]){
+				orientation = qr_code["orientation"];
+				var points = get_points(event.data);
+				var canvas = camera.getFrame();
+				draw_overlay(camera,points);
+				var qr = remap(canvas, points, 100, 100);
+				document.body.appendChild(qr);
+				try{
+					console.log();
+				}catch(e){
+					
 				}
-				update_position();
+				position_cat(event.data);
 			}
-			//camera.ctx.fillText('QR Orientation: ' + orientation, 1, 11);
+			update_position();*/
+			qr_handler.update(event.data);
+			camera.update();
 		});
 		
 		function update_position(){
@@ -107,9 +140,10 @@
 			return {"orientation":orientation,"validated":validated};
 		}
 		
-		function show_boxes(rectangles){
+		function draw_boxes(cam, rectangles){
 		
 			var i = 0;
+			var c_ctx = cam.get_canvas_context();
 			
 			rectangles.forEach(function(rect) {
 				i++;
@@ -121,13 +155,13 @@
 					rect.colour = "#00aa00";
 				}
 								
-				camera.ctx.strokeStyle = rect.colour;
-				camera.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-				camera.ctx.font = '11px Helvetica';
-				camera.ctx.fillStyle = "#fff";
-				camera.ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-				camera.ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-				camera.ctx.fillText('#: ' + i, rect.x + rect.width + 5, rect.y + 33);
+				c_ctx.strokeStyle = rect.colour;
+				c_ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+				c_ctx.font = '11px Helvetica';
+				c_ctx.fillStyle = "#fff";
+				c_ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+				c_ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+				c_ctx.fillText('#: ' + i, rect.x + rect.width + 5, rect.y + 33);
 			});
 		}
 		
