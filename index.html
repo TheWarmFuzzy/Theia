@@ -67,17 +67,17 @@
 		}
 		
 		if(window.innerWidth * ratio > window.innerHeight){
-			width = window.innerHeight / ratio;
+			width = Math.floor(window.innerHeight / ratio);
 			height = window.innerHeight;
 		}else{
 			width = window.innerWidth;
-			height = window.innerWidth * ratio;
+			height = Math.floor(window.innerWidth * ratio);
 		}
 		
 		var showcase_mode = true;
 		var debug_mode = true;
 		//600 x 405
-		var camera = new Camera(width, height);
+		var camera = new Camera(600, 450);
 		camera.start();
 		var video_scalar = camera.width / 600 > camera.height / 405 ? camera.width / 600 : camera.height / 405;
 		console.log(video_scalar);
