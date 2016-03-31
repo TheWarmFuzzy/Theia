@@ -7,12 +7,17 @@
 			overflow:hidden;
 			background-color: #fff;
 		}
-		video, canvas{
+		/*video, canvas{
 			position:absolute;
 			top:50%;
 			margin-top:-225px;
 			left:50%;
 			margin-left:-300px;
+		}*/
+		video, canvas{
+			position:absolute;
+			top:0px;
+			left:0px;
 		}
 		canvas{
 			z-index:100;
@@ -54,14 +59,16 @@
 	<script type="text/javascript" src="lib/QR_Code.js"></script>
 	<script type="text/javascript" src="lib/Showcase.js"></script>
 	<script type="text/javascript">
-		var showcase_mode = true;
-		var debug_mode = false;
-
-		var camera = new Camera(600, 450);
-		var tracker = new tracking.ColorTracker();
-		var overlay = new Overlay(600, 450);
-		var qr_handler = new QR_Code(camera, overlay);
+		var showcase_mode = false;
+		var debug_mode = true;
+		//600 x 405
+		var camera = new Camera(screen.width, screen.height);
 		camera.start();
+		var video_scalar = camera.video.offsetWidth / 600 > camera.video.offsetHeight / 405 ? camera.video.offsetWidth / 600 : camera.video.offsetHeight / 405;
+		var tracker = new tracking.ColorTracker();
+		var overlay = new Overlay(camera.video.offsetWidth, camera.video.offsetHeight);
+		var qr_handler = new QR_Code(camera, overlay);
+		
 		
 		function start(){
 			console.log("Started");
