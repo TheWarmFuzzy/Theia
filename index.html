@@ -28,36 +28,28 @@
 	<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
-	<!--<script type="text/javascript" src="lib/grid.js"></script>
-	<script type="text/javascript" src="lib/version.js"></script>
-	<script type="text/javascript" src="lib/detector.js"></script>
-	<script type="text/javascript" src="lib/formatinf.js"></script>
-	<script type="text/javascript" src="lib/errorlevel.js"></script>
-	<script type="text/javascript" src="lib/bitmat.js"></script>
-	<script type="text/javascript" src="lib/datablock.js"></script>
-	<script type="text/javascript" src="lib/bmparser.js"></script>
-	<script type="text/javascript" src="lib/datamask.js"></script>
-	<script type="text/javascript" src="lib/rsdecoder.js"></script>
-	<script type="text/javascript" src="lib/gf256poly.js"></script>
-	<script type="text/javascript" src="lib/gf256.js"></script>
-	<script type="text/javascript" src="lib/decoder.js"></script>
-	<script type="text/javascript" src="lib/qrcode.js"></script>
-	<script type="text/javascript" src="lib/findpat.js"></script>
-	<script type="text/javascript" src="lib/alignpat.js"></script>
-	<script type="text/javascript" src="lib/databr.js"></script>-->
-
+	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="lib/Ajax.js"></script>
+	
 	<script type="text/javascript" src="lib/llqrcode.js"></script>    
     <script type="text/javascript" src="lib/qrcode.js"></script>
 	
 	<script type="text/javascript" src="lib/theia_lib.js"></script>
 	<script type="text/javascript" src="lib/camera.js"></script>
-	<script type="text/javascript" src="lib/three.min.js"></script>
+	
+	<script type="text/javascript" src="lib/three.js"></script>
+	<script type="text/javascript" src="lib/Animation.js"></script>
+	<script type="text/javascript" src="lib/AnimationHandler.js"></script>
+	<script type="text/javascript" src="lib/KeyFrameAnimation.js"></script>
+	<script type="text/javascript" src="lib/ColladaLoader.js"></script>
 	<script type="text/javascript" src="lib/OBJLoader.js"></script>
 	<script type="text/javascript" src="lib/3DOverlay.js"></script>
+	
 	<script type="text/javascript" src="lib/tracking_mk_theia.js"></script>
-	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
+	
 	<script type="text/javascript" src="lib/QR_Code.js"></script>
 	<script type="text/javascript" src="lib/Showcase.js"></script>
+	
 	<script type="text/javascript">
 		var width, height, ratio;
 		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -74,20 +66,18 @@
 			height = Math.floor(window.innerWidth * ratio);
 		}
 		
-		var showcase_mode = true;
+		var showcase_mode = false;
 		var debug_mode = true;
 		//600 x 405
 		var camera = new Camera(600, 450);
 		camera.start();
 		var video_scalar = camera.width / 600 > camera.height / 405 ? camera.width / 600 : camera.height / 405;
-		console.log(video_scalar);
 		var tracker = new tracking.ColorTracker();
 		var overlay = new Overlay(camera.video.offsetWidth, camera.video.offsetHeight);
 		var qr_handler = new QR_Code(camera, overlay);
 		
 		
 		function start(){
-			console.log("Started");
 			tracking.track(camera, tracker);
 			tracker.on('track', function(event) {
 				if(debug_mode)
