@@ -49,77 +49,15 @@
 	
 	<script type="text/javascript" src="lib/QR_Code.js"></script>
 	<script type="text/javascript" src="lib/Showcase.js"></script>
+	<script type="text/javascript" src="lib/Sprite_Sheet.js"></script>
+	<script type="text/javascript" src="lib/theia_tracker.js"></script>
+	<script type="text/javascript" src="lib/Theia.js"></script>
 	
 	<script type="text/javascript">
-		var width, height, ratio;
-		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-			ratio = 0.625;
-		}else{
-			ratio = 0.75;
-		}
-		
-		if(window.innerWidth * ratio > window.innerHeight){
-			width = Math.floor(window.innerHeight / ratio);
-			height = window.innerHeight;
-		}else{
-			width = window.innerWidth;
-			height = Math.floor(window.innerWidth * ratio);
-		}
-		
-		var showcase_mode = false;
-		var debug_mode = true;
-		//600 x 405
-		var camera = new Camera(600, 450);
-		camera.start();
-		var video_scalar = camera.width / 600 > camera.height / 405 ? camera.width / 600 : camera.height / 405;
-		var tracker = new tracking.ColorTracker();
-		var overlay = new Overlay(camera.video.offsetWidth, camera.video.offsetHeight);
-		var qr_handler = new QR_Code(camera, overlay);
-		
-		
-		function start(){
-			tracking.track(camera, tracker);
-			tracker.on('track', function(event) {
-				if(debug_mode)
-					draw_boxes(camera, event.data);
-				qr_handler.update(event.data);
-				camera.update();
-			});
-		}
-		
-		if(showcase_mode){
-			var showcase = new Showcase(camera, start);
-			showcase.start();
-		}else{
-			start();
-		}
-		
-		function draw_boxes(cam, rectangles){
-		
-			var i = 0;
-			var c_ctx = cam.get_canvas_context();
-			
-			rectangles.forEach(function(rect) {
-				i++;
-				if (rect.color == 'theia_red') {
-					rect.colour = "#aa0000";
-				}
-				
-				if (rect.color == 'theia_green') {
-					rect.colour = "#00aa00";
-				}
-								
-				c_ctx.strokeStyle = rect.colour;
-				c_ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-				c_ctx.font = '11px Helvetica';
-				c_ctx.fillStyle = "#fff";
-				c_ctx.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-				c_ctx.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-				c_ctx.fillText('#: ' + i, rect.x + rect.width + 5, rect.y + 33);
-			});
-		}
-
-		
+		//var video_scalar = camera.width / 600 > camera.height / 450 ? camera.width / 600 : camera.height / 450;
+		var video_scalar = .75;
+		var theia = new Theia();
+		theia.start();	
 	</script>
 	
 </body>
