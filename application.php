@@ -3,9 +3,9 @@
 <head>
 	<style>
 		body{
-			margin:0px;
+			margin:10px;
 			overflow:hidden;
-			background-color: #fff;
+			background-color: #000;
 		}
 		video, canvas{
 			position:absolute;
@@ -22,12 +22,20 @@
 		canvas{
 			z-index:100;
 		}
-	
+		#back{
+			font-family: Helvetica, Arial, Sans-Serif;
+			text-decoration: none;
+			color:#fff
+		}
+		#back:visited{
+			color:#fff
+		}
 	</style>
 	<meta http-equiv="Cache-Control" content="no-store" />
 	<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
+	<a id="back" href="index.php">Back to Homepage</a>
 	<script type="text/javascript" src="lib/jquery-1.11.3.js"></script>
 	<script type="text/javascript" src="lib/Ajax.js"></script>
 	
